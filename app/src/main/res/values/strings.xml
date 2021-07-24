@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">NoBroker</string>
+    <string name="item_list">Item List</string>
 </resources>
