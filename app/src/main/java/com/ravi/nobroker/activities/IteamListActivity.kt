@@ -3,7 +3,11 @@ package com.ravi.nobroker.activities
 import android.content.Context
 import android.content.Intent
 import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
+import android.os.Build
 import android.os.Bundle
+import android.view.View
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -33,6 +37,7 @@ class IteamListActivity : AppCompatActivity() ,OnClickOfItem{
     val dataModelList = mutableListOf<MyDataEntity>()
 
 
+    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -49,16 +54,24 @@ class IteamListActivity : AppCompatActivity() ,OnClickOfItem{
         listViewModel = ViewModelProvider(this, factory).get(ListViewModel::class.java)
         setRecyclerAdapter()
 
-        CoroutineScope(Dispatchers.IO).launch {
-            listViewModel.insertData()
+
+        if (isNetworkConnected()) {
+            CoroutineScope(Dispatchers.IO).launch {
+                listViewModel.insertData()
+            }
+
+            observeLiveData()
         }
-
-        observeLiveData()
-
+        else if (!isNetworkConnected()) {
+            observeLiveData()
+        }
 
     }
 
     private fun observeLiveData() {
+        shimmerFrameLayout.stopShimmer()
+        shimmerFrameLayout.visibility = View.GONE
+        recyclerviewList.visibility = View.VISIBLE
         listViewModel.getData().observe(this, Observer {
             dataModelList.clear()
             dataModelList.addAll(it)
@@ -86,5 +99,20 @@ class IteamListActivity : AppCompatActivity() ,OnClickOfItem{
         intent.putExtra("subtitle",dataModelItem.subTitle)
         startActivity(intent)
     }
-
+    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
+    private fun isNetworkConnected(): Boolean {
+        //1
+        val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        //2
+        val activeNetwork = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            connectivityManager.activeNetwork
+        } else {
+            TODO("VERSION.SDK_INT < M")
+        }
+        //3
+        val networkCapabilities = connectivityManager.getNetworkCapabilities(activeNetwork)
+        //4
+        return networkCapabilities != null &&
+                networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+    }
 }
