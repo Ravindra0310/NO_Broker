@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface MyDataDao {
@@ -13,4 +14,7 @@ interface MyDataDao {
 
     @Query("select * from my_data_table")
     fun getTask(): LiveData<List<MyDataEntity>>
+
+    @Query("SELECT * FROM my_data_table WHERE title LIKE :searchQuery")
+    fun searchDatabase(searchQuery: String): Flow<List<MyDataEntity>>
 }

@@ -11,6 +11,7 @@ import com.ravi.nobroker.model.DataModel
 import retrofit2.Call
 import retrofit2.Callback
 
+import kotlinx.coroutines.flow.Flow
 
 class ListRepository(val MyDataDaoObject:MyDataDao) {
     val apiClient=Network.getInstance().create(ApiClient::class.java)
@@ -25,11 +26,16 @@ class ListRepository(val MyDataDaoObject:MyDataDao) {
 
         /*
       Once the response is fetched, navigate the user back to view model as this callback is being implemented
-      in the Viewmodel class
+      in the ViewModel class
        */
     }
-
+/*
+*/
     fun getlist(): LiveData<List<MyDataEntity>> {
         return MyDataDaoObject.getTask()
+    }
+
+    fun searchDatabase(searchQuery: String): Flow<List<MyDataEntity>> {
+        return MyDataDaoObject.searchDatabase(searchQuery)
     }
 }

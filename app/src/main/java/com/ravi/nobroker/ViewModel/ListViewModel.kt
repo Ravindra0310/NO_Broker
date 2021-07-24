@@ -9,6 +9,7 @@ import com.ravi.nobroker.repository.ListRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import androidx.lifecycle.asLiveData
 import retrofit2.Call
 
 import retrofit2.Callback
@@ -20,45 +21,19 @@ import java.util.ArrayList
  * response changes via live data
  */
 
-class ListViewModel(val respository: ListRepository) : ViewModel() {
-
-//    private val repository = ListRepository(this)
-//
-//    private val mutableLiveData= MutableLiveData<DataModel>()
-//
-//    val liveData: LiveData<DataModel> = mutableLiveData
-//    /**
-//     * This method is called once the response is received from the API
-//     */
-//    override fun onResponse(call: Call<DataModel>, response: Response<DataModel>) {
-//
-//        response.body()?.let {
-//            mutableLiveData.value=it
-//        }
-//    }
-//    /**
-//     * If the API response fails due to some reason this method gets invoked
-//     */
-//    override fun onFailure(call: Call<DataModel>, t: Throwable) {
-//
-//    }
-//    /**
-//     * This method makes an API call to the Repository class where actual API call is made
-//     */
-//    fun callAPI() {
-//        CoroutineScope(Dispatchers.IO).launch {
-//            repository.getListOfModel()
-//        }
-//    }
-//}
+class ListViewModel (val repository: ListRepository) : ViewModel() {
 
     fun getData(): LiveData<List<MyDataEntity>> {
-        return respository.getlist()
+        return repository.getlist()
     }
 
     fun insertData() {
         CoroutineScope(Dispatchers.IO).launch {
-            respository.getListOfModel()
+            repository.getListOfModel()
         }
+    }
+
+    fun searchDatabase(searchQuery: String): LiveData<List<MyDataEntity>> {
+        return repository.searchDatabase(searchQuery).asLiveData()
     }
 }

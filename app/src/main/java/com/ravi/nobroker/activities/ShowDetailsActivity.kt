@@ -1,5 +1,6 @@
 package com.ravi.nobroker.activities
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.bumptech.glide.Glide
@@ -12,6 +13,9 @@ class ShowDetailsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_show_details)
         setData()
+        ibBackButton.setOnClickListener {
+            startActivity(Intent(this,IteamListActivity::class.java))
+        }
     }
 
     private fun setData() {

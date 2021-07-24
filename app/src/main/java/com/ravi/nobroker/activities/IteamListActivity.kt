@@ -6,9 +6,12 @@ import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.View
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -30,7 +33,7 @@ import kotlinx.coroutines.launch
  * This Activity makes an Api call and populates the result in a recycler view. This activity has
  * only UI related code
  */
-class IteamListActivity : AppCompatActivity() ,OnClickOfItem{
+class IteamListActivity : AppCompatActivity() ,OnClickOfItem,SearchView.OnQueryTextListener{
 
     private lateinit var listViewModel: ListViewModel
     private lateinit var listAdapter: ListAdapter
@@ -56,16 +59,15 @@ class IteamListActivity : AppCompatActivity() ,OnClickOfItem{
 
 
         if (isNetworkConnected()) {
-            CoroutineScope(Dispatchers.IO).launch {
-                listViewModel.insertData()
-            }
-
+//            CoroutineScope(Dispatchers.IO).launch {
+//                listViewModel.insertData()
+//            }
             observeLiveData()
         }
         else if (!isNetworkConnected()) {
             observeLiveData()
         }
-
+    searchList()
     }
 
     private fun observeLiveData() {
@@ -115,4 +117,32 @@ class IteamListActivity : AppCompatActivity() ,OnClickOfItem{
         return networkCapabilities != null &&
                 networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
     }
+
+    fun searchList(){
+        searchView?.isSubmitButtonEnabled = true
+        searchView?.setOnQueryTextListener(this)
+    }
+
+    override fun onQueryTextSubmit(query: String?): Boolean {
+        return true
+    }
+
+    override fun onQueryTextChange(newText: String?): Boolean {
+        if(newText != null){
+            searchDatabase(newText)
+        }
+        return true
+    }
+
+    private fun searchDatabase(query: String) {
+        val searchQuery = "%$query%"
+        listViewModel.searchDatabase(searchQuery).observe(this, { list ->
+            list.let {
+                dataModelList.clear()
+                dataModelList.addAll(it)
+                listAdapter.updateList(dataModelList)
+            }
+        })
+    }
+
 }
