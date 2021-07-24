@@ -27,12 +27,16 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView" />
 
-    <androidx.recyclerview.widget.RecyclerView
+    <com.todkars.shimmer.ShimmerRecyclerView
         android:id="@+id/recyclerviewList"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
+        android:clipToPadding="false"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/searchView" />
+        android:orientation="vertical"
+        app:shimmer_recycler_item_count="5"
+        app:layout_constraintTop_toBottomOf="@+id/searchView"
+        app:shimmer_recycler_layout="@layout/shimmer_item"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

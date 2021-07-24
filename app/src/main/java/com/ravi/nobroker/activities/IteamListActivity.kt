@@ -1,6 +1,7 @@
 package com.ravi.nobroker.activities
 
 import android.content.Context
+import android.content.Intent
 import android.net.ConnectivityManager
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
@@ -13,6 +14,7 @@ import com.ravi.nobroker.R
 import com.ravi.nobroker.ViewModel.ListViewModel
 import com.ravi.nobroker.ViewModel.ViewModelFactory
 import com.ravi.nobroker.adapter.ListAdapter
+import com.ravi.nobroker.adapter.viewholder.OnClickOfItem
 import com.ravi.nobroker.repository.ListRepository
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.CoroutineScope
@@ -24,7 +26,7 @@ import kotlinx.coroutines.launch
  * This Activity makes an Api call and populates the result in a recycler view. This activity has
  * only UI related code
  */
-class IteamListActivity : AppCompatActivity() {
+class IteamListActivity : AppCompatActivity() ,OnClickOfItem{
 
     private lateinit var listViewModel: ListViewModel
     private lateinit var listAdapter: ListAdapter
@@ -50,6 +52,7 @@ class IteamListActivity : AppCompatActivity() {
         CoroutineScope(Dispatchers.IO).launch {
             listViewModel.insertData()
         }
+
         observeLiveData()
 
 
@@ -67,20 +70,21 @@ class IteamListActivity : AppCompatActivity() {
      * Sets the recycler view adapter
      */
     private fun setRecyclerAdapter() {
-        listAdapter = ListAdapter(dataModelList)
+        listAdapter = ListAdapter(dataModelList,this)
         val layoutManager = LinearLayoutManager(this)
-        recyclerviewList.apply {
+            recyclerviewList.apply {
             this.layoutManager = layoutManager
             adapter = listAdapter
         }
 
     }
 
-    private fun isNetworkAvailable(): Boolean {
-        val connectivityManager =
-            getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        val activeNetworkInfo = connectivityManager.activeNetworkInfo
-        return activeNetworkInfo != null && activeNetworkInfo.isConnected
+    override fun showDetails(dataModelItem: MyDataEntity, position: Int) {
+        var intent=Intent(this,ShowDetailsActivity::class.java)
+        intent.putExtra("image",dataModelItem.image)
+        intent.putExtra("title",dataModelItem.title)
+        intent.putExtra("subtitle",dataModelItem.subTitle)
+        startActivity(intent)
     }
 
 }

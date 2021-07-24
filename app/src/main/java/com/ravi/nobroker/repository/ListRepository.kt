@@ -14,7 +14,6 @@ import retrofit2.Callback
 
 class ListRepository(val MyDataDaoObject:MyDataDao) {
     val apiClient=Network.getInstance().create(ApiClient::class.java)
-    val responseHandler = ResponseHandler()
     lateinit var myDataEntity : MyDataEntity
 
     suspend fun getListOfModel(){

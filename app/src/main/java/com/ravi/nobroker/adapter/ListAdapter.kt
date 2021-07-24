@@ -5,14 +5,14 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.guessmyage.Models.MyDataEntity
 import com.ravi.nobroker.R
-import com.ravi.nobroker.model.DataModelItem
-import com.ravi.nobroker.viewholder.ListViewHolder
+import com.ravi.nobroker.adapter.viewholder.ListViewHolder
+import com.ravi.nobroker.adapter.viewholder.OnClickOfItem
 
-class ListAdapter(private var dataList:  List<MyDataEntity>):
+class ListAdapter(private var dataList:  List<MyDataEntity>,var onClickOfItem: OnClickOfItem):
     RecyclerView.Adapter<ListViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ListViewHolder {
         val view=LayoutInflater.from(parent.context).inflate(R.layout.item_layout,parent,false)
-        return ListViewHolder(view)
+        return ListViewHolder(view,onClickOfItem)
     }
 
     override fun onBindViewHolder(holder: ListViewHolder, position: Int) {
