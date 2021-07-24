@@ -59,9 +59,9 @@ class IteamListActivity : AppCompatActivity() ,OnClickOfItem,SearchView.OnQueryT
 
 
         if (isNetworkConnected()) {
-//            CoroutineScope(Dispatchers.IO).launch {
-//                listViewModel.insertData()
-//            }
+            CoroutineScope(Dispatchers.IO).launch {
+                listViewModel.insertData()
+            }
             observeLiveData()
         }
         else if (!isNetworkConnected()) {
@@ -69,7 +69,9 @@ class IteamListActivity : AppCompatActivity() ,OnClickOfItem,SearchView.OnQueryT
         }
     searchList()
     }
-
+/*
+observeLiveData is to observe the live data coming from retrofit and setting that data to recycleView
+ */
     private fun observeLiveData() {
         shimmerFrameLayout.stopShimmer()
         shimmerFrameLayout.visibility = View.GONE
@@ -101,6 +103,11 @@ class IteamListActivity : AppCompatActivity() ,OnClickOfItem,SearchView.OnQueryT
         intent.putExtra("subtitle",dataModelItem.subTitle)
         startActivity(intent)
     }
+    /*
+    isNetworkConnected is use to check the network status of device
+     */
+
+
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     private fun isNetworkConnected(): Boolean {
         //1
@@ -133,7 +140,9 @@ class IteamListActivity : AppCompatActivity() ,OnClickOfItem,SearchView.OnQueryT
         }
         return true
     }
-
+/*
+searchDatabase is use to search the list from database
+ */
     private fun searchDatabase(query: String) {
         val searchQuery = "%$query%"
         listViewModel.searchDatabase(searchQuery).observe(this, { list ->

@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">NoBroker</string>
     <string name="item_list">Item List</string>
+    <string name="textview">TextView</string>
+    <string name="title">Title</string>
+    <string name="todo">TODO</string>
 </resources>

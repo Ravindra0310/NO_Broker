@@ -14,9 +14,13 @@ class ShowDetailsActivity : AppCompatActivity() {
         setContentView(R.layout.activity_show_details)
         setData()
         ibBackButton.setOnClickListener {
-            startActivity(Intent(this,IteamListActivity::class.java))
+            finish()
         }
     }
+/*
+set Data is use to set data to showDetails activity
+
+ */
 
     private fun setData() {
         val photo=intent.getStringExtra("image")
